@@ -17,53 +17,44 @@ export default function Home() {
         const clientX = e.clientX;
         const clientY = e.clientY;
 
-        if (!radius) return; // Prevent adding dots if radius is not set
+        // if (!radius) return; // Prevent adding dots if radius is not set
 
         const dot = { x: clientX, y: clientY };
         let isValid = true;
-
-        
-        // const existingDots = dots[i];
-        // const gap = distance(existingDots, dot);
-        // if(gap < 2*radius) {
-        //     const newDots = existingDots.filter((_,item) => item !== dot);
-        //     setDots(newDots);
-        // }
-    
 
         dots.forEach((item) => {
             const gap = distance(item, dot);
             if (gap < 2 * radius) {
                 isValid = false;
-        
+
                 // Check if the clicked dot is within the bounds of the existing dot
-                if (
-                    (dot.x >= item.x - radius && dot.x <= item.x + radius) &&
-                    (dot.y >= item.y - radius && dot.y <= item.y + radius)
-                ) {
-                    const index = dots.indexOf(item);
-                    if (index !== -1) {
-                        // Remove the dot and update state
-                        dots.splice(index, 1);
-                        setDots([...dots]);
-                    }
-                }
+                // if (
+                //     (dot.x >= item.x - radius && dot.x <= item.x + radius) &&
+                //     (dot.y >= item.y - radius && dot.y <= item.y + radius)
+                // ) {
+                //     const index = dots.indexOf(item);
+                //     if (index !== -1) {
+                //         // Remove the dot and update state
+                //         dots.splice(index, 1);
+                //         setDots([...dots]);
+                //     }
+                // }
             }
-        });
-        
+        })
 
         if (isValid) {
-            setDots((prevDots) => [...prevDots, dot]);
-        }
-
-        // const newDots = dots.filter(item => {
-        //     const gap = distance(item, dot);
-        //     return gap >= 2 * radius; // Keep dots that are not clicked
-        // });
-        // setDots(newDots);
+           setDots((prevDots) => [...prevDots, dot]);
+            if(!radius) {
+                alert('Enter the Radius of Circle');
+                dots.splice(-1, 1);
+                setDots([...dots]);
+            }
+        } 
     };
 
-    
+    const handleRadiusChange = (e) => {
+        setRadius(e.target.value);
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault(); // Prevent default form submission
@@ -75,18 +66,18 @@ export default function Home() {
     return (
         <div className='h-screen relative'>
             <div className='flex justify-center'>
-                <form className='flex p-4' onSubmit={handleSubmit}>
+                <div className='flex p-4' onSubmit={handleSubmit}>
                     <p className='text-xl'>Enter the Radius of Circle</p>
                     <input
                         type="number"
                         value={radius}
                         placeholder='Enter Radius'
                         className='input-no-spinner border mx-2 px-2'
-                        onChange={(e) => setRadius(e.target.value)}
+                        onChange={handleRadiusChange}
                     />
-                </form>
+                </div>
             </div>
-            <div className='w-full h-[90vh] bg-gray-300 ' onClick={handleElementClick}>
+            <div className='h-[90vh] bg-gray-300 ' onClick={handleElementClick}>
                 {dots.map((dot, index) => (
                     <div
                         key={index}
